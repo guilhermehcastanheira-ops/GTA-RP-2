@@ -3,140 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Declaração de IR - GTA RP</title>
+<title>Declaração IR - GTA RP</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-  h1 { text-align: center; color: #333; }
-  label { display: block; margin-top: 10px; }
-  input[type="text"], input[type="number"] { width: 200px; padding: 5px; margin-top: 3px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  th { background: #eee; }
-  button { margin-top: 10px; padding: 10px 15px; }
-  .resultado { margin-top: 20px; background: #fff; padding: 15px; border: 1px solid #ccc; }
+    body {
+        font-family: Arial, sans-serif;
+        background: #e6f0fa;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #004aad;
+        color: #fff;
+        padding: 20px 0;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    main {
+        display: flex;
+        justify-content: center;
+        padding: 30px 10px;
+    }
+    .form-container {
+        background: #fff;
+        padding: 25px 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 500px;
+    }
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #004aad;
+    }
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+    button {
+        background: #004aad;
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        margin-top: 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+    button:hover {
+        background: #00337a;
+    }
+    .resultado {
+        background: #f0f4ff;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: left;
+        font-weight: bold;
+        color: #004aad;
+    }
 </style>
 </head>
 <body>
 
-<h1>Declaração de IR - GTA RP</h1>
+<header>Declaração de Imposto de Renda - GTA RP</header>
 
-<h2>Informações do Player</h2>
-<label>Nome: <input type="text" id="nome"></label>
-<label>ID: <input type="text" id="id"></label>
-<label>Profissão: <input type="text" id="profissao"></label>
-<label>Renda Mensal: <input type="number" id="renda" value="0"></label>
-<label>Meses Trabalhados: <input type="number" id="meses" value="12"></label>
+<main>
+    <div class="form-container">
+        <label>Nome:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome">
 
-<h2>Veículos</h2>
-<table id="tabelaVeiculos">
-  <thead>
-    <tr>
-      <th>Modelo</th>
-      <th>Valor</th>
-      <th>Imposto (5%)</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-<button onclick="adicionarVeiculo()">Adicionar Veículo</button>
+        <label>RG:</label>
+        <input type="text" id="rg" placeholder="Digite seu RG">
 
-<h2>Bens</h2>
-<table id="tabelaBens">
-  <thead>
-    <tr>
-      <th>Tipo</th>
-      <th>Valor</th>
-      <th>Imposto (3%)</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-<button onclick="adicionarBem()">Adicionar Bem</button>
+        <label>Remuneração Mensal:</label>
+        <input type="number" id="renda" value="0">
 
-<div class="resultado">
-  <h2>Resultado</h2>
-  <p>Renda Anual: R$ <span id="rendaAnual">0</span></p>
-  <p>Total Veículos: R$ <span id="totalVeiculos">0</span></p>
-  <p>Total Bens: R$ <span id="totalBens">0</span></p>
-  <p>Imposto Veículos: R$ <span id="impostoVeiculos">0</span></p>
-  <p>Imposto Bens: R$ <span id="impostoBens">0</span></p>
-  <p>Base de Cálculo: R$ <span id="baseCalculo">0</span></p>
-  <p>Imposto Renda (10%): R$ <span id="impostoRenda">0</span></p>
-  <p><strong>Imposto Total: R$ <span id="impostoTotal">0</span></strong></p>
-  <button onclick="calcularIR()">Calcular IR</button>
-</div>
+        <label>Profissão Atual:</label>
+        <input type="text" id="profissao" placeholder="Digite sua profissão">
+
+        <label>Quantidade de Veículos:</label>
+        <input type="number" id="qtdVeiculos" value="0">
+
+        <button onclick="calcularIR()">Calcular IR</button>
+
+        <div class="resultado" id="resultado">
+            <p>Renda Anual: R$ <span id="rendaAnual">0</span></p>
+            <p>Imposto de Renda (10%): R$ <span id="impostoRenda">0</span></p>
+            <p>Observação: Veículos não incluídos nesta versão</p>
+        </div>
+    </div>
+</main>
 
 <script>
-let veiculos = [];
-let bens = [];
-
-function adicionarVeiculo() {
-  const tbody = document.querySelector("#tabelaVeiculos tbody");
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><input type="text" placeholder="Modelo"></td>
-    <td><input type="number" value="0"></td>
-    <td class="imposto">0</td>
-    <td><button onclick="removerLinha(this)">Remover</button></td>
-  `;
-  tbody.appendChild(tr);
-}
-
-function adicionarBem() {
-  const tbody = document.querySelector("#tabelaBens tbody");
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><input type="text" placeholder="Tipo"></td>
-    <td><input type="number" value="0"></td>
-    <td class="imposto">0</td>
-    <td><button onclick="removerLinha(this)">Remover</button></td>
-  `;
-  tbody.appendChild(tr);
-}
-
-function removerLinha(botao) {
-  botao.parentElement.parentElement.remove();
-}
-
 function calcularIR() {
-  const rendaMensal = parseFloat(document.getElementById("renda").value) || 0;
-  const meses = parseInt(document.getElementById("meses").value) || 0;
-  const rendaAnual = rendaMensal * meses;
-  document.getElementById("rendaAnual").textContent = rendaAnual.toFixed(2);
+    const nome = document.getElementById("nome").value;
+    const rg = document.getElementById("rg").value;
+    const rendaMensal = parseFloat(document.getElementById("renda").value) || 0;
+    const meses = 12; // fixo para cálculo anual
+    const rendaAnual = rendaMensal * meses;
+    const impostoRenda = rendaAnual * 0.10;
 
-  let totalVeiculos = 0;
-  let impostoVeiculos = 0;
-  document.querySelectorAll("#tabelaVeiculos tbody tr").forEach(tr => {
-    const valor = parseFloat(tr.children[1].children[0].value) || 0;
-    const imposto = valor * 0.05;
-    tr.children[2].textContent = imposto.toFixed(2);
-    totalVeiculos += valor;
-    impostoVeiculos += imposto;
-  });
-  document.getElementById("totalVeiculos").textContent = totalVeiculos.toFixed(2);
-  document.getElementById("impostoVeiculos").textContent = impostoVeiculos.toFixed(2);
+    document.getElementById("rendaAnual").textContent = rendaAnual.toFixed(2);
+    document.getElementById("impostoRenda").textContent = impostoRenda.toFixed(2);
 
-  let totalBens = 0;
-  let impostoBens = 0;
-  document.querySelectorAll("#tabelaBens tbody tr").forEach(tr => {
-    const valor = parseFloat(tr.children[1].children[0].value) || 0;
-    const imposto = valor * 0.03;
-    tr.children[2].textContent = imposto.toFixed(2);
-    totalBens += valor;
-    impostoBens += imposto;
-  });
-  document.getElementById("totalBens").textContent = totalBens.toFixed(2);
-  document.getElementById("impostoBens").textContent = impostoBens.toFixed(2);
-
-  const baseCalculo = rendaAnual + totalVeiculos + totalBens;
-  const impostoRenda = rendaAnual * 0.10;
-  const impostoTotal = impostoVeiculos + impostoBens + impostoRenda;
-
-  document.getElementById("baseCalculo").textContent = baseCalculo.toFixed(2);
-  document.getElementById("impostoRenda").textContent = impostoRenda.toFixed(2);
-  document.getElementById("impostoTotal").textContent = impostoTotal.toFixed(2);
+    const resultadoDiv = document.getElementById("resultado");
+    resultadoDiv.innerHTML = `
+        <p>Nome: ${nome}</p>
+        <p>RG: ${rg}</p>
+        <p>Profissão Atual: ${document.getElementById("profissao").value}</p>
+        <p>Renda Anual: R$ ${rendaAnual.toFixed(2)}</p>
+        <p>Imposto de Renda (10%): R$ ${impostoRenda.toFixed(2)}</p>
+        <p>Quantidade de Veículos: ${document.getElementById("qtdVeiculos").value}</p>
+    `;
 }
 </script>
 
