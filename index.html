@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Declaração de IR - GTA RP</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+  h1 { text-align: center; color: #333; }
+  label { display: block; margin-top: 10px; }
+  input[type="text"], input[type="number"] { width: 200px; padding: 5px; margin-top: 3px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background: #eee; }
+  button { margin-top: 10px; padding: 10px 15px; }
+  .resultado { margin-top: 20px; background: #fff; padding: 15px; border: 1px solid #ccc; }
+</style>
+</head>
+<body>
+
+<h1>Declaração de IR - GTA RP</h1>
+
+<h2>Informações do Player</h2>
+<label>Nome: <input type="text" id="nome"></label>
+<label>ID: <input type="text" id="id"></label>
+<label>Profissão: <input type="text" id="profissao"></label>
+<label>Renda Mensal: <input type="number" id="renda" value="0"></label>
+<label>Meses Trabalhados: <input type="number" id="meses" value="12"></label>
+
+<h2>Veículos</h2>
+<table id="tabelaVeiculos">
+  <thead>
+    <tr>
+      <th>Modelo</th>
+      <th>Valor</th>
+      <th>Imposto (5%)</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<button onclick="adicionarVeiculo()">Adicionar Veículo</button>
+
+<h2>Bens</h2>
+<table id="tabelaBens">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Valor</th>
+      <th>Imposto (3%)</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<button onclick="adicionarBem()">Adicionar Bem</button>
+
+<div class="resultado">
+  <h2>Resultado</h2>
+  <p>Renda Anual: R$ <span id="rendaAnual">0</span></p>
+  <p>Total Veículos: R$ <span id="totalVeiculos">0</span></p>
+  <p>Total Bens: R$ <span id="totalBens">0</span></p>
+  <p>Imposto Veículos: R$ <span id="impostoVeiculos">0</span></p>
+  <p>Imposto Bens: R$ <span id="impostoBens">0</span></p>
+  <p>Base de Cálculo: R$ <span id="baseCalculo">0</span></p>
+  <p>Imposto Renda (10%): R$ <span id="impostoRenda">0</span></p>
+  <p><strong>Imposto Total: R$ <span id="impostoTotal">0</span></strong></p>
+  <button onclick="calcularIR()">Calcular IR</button>
+</div>
+
+<script>
+let veiculos = [];
+let bens = [];
+
+function adicionarVeiculo() {
+  const tbody = document.querySelector("#tabelaVeiculos tbody");
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Modelo"></td>
+    <td><input type="number" value="0"></td>
+    <td class="imposto">0</td>
+    <td><button onclick="removerLinha(this)">Remover</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function adicionarBem() {
+  const tbody = document.querySelector("#tabelaBens tbody");
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Tipo"></td>
+    <td><input type="number" value="0"></td>
+    <td class="imposto">0</td>
+    <td><button onclick="removerLinha(this)">Remover</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removerLinha(botao) {
+  botao.parentElement.parentElement.remove();
+}
+
+function calcularIR() {
+  const rendaMensal = parseFloat(document.getElementById("renda").value) || 0;
+  const meses = parseInt(document.getElementById("meses").value) || 0;
+  const rendaAnual = rendaMensal * meses;
+  document.getElementById("rendaAnual").textContent = rendaAnual.toFixed(2);
+
+  let totalVeiculos = 0;
+  let impostoVeiculos = 0;
+  document.querySelectorAll("#tabelaVeiculos tbody tr").forEach(tr => {
+    const valor = parseFloat(tr.children[1].children[0].value) || 0;
+    const imposto = valor * 0.05;
+    tr.children[2].textContent = imposto.toFixed(2);
+    totalVeiculos += valor;
+    impostoVeiculos += imposto;
+  });
+  document.getElementById("totalVeiculos").textContent = totalVeiculos.toFixed(2);
+  document.getElementById("impostoVeiculos").textContent = impostoVeiculos.toFixed(2);
+
+  let totalBens = 0;
+  let impostoBens = 0;
+  document.querySelectorAll("#tabelaBens tbody tr").forEach(tr => {
+    const valor = parseFloat(tr.children[1].children[0].value) || 0;
+    const imposto = valor * 0.03;
+    tr.children[2].textContent = imposto.toFixed(2);
+    totalBens += valor;
+    impostoBens += imposto;
+  });
+  document.getElementById("totalBens").textContent = totalBens.toFixed(2);
+  document.getElementById("impostoBens").textContent = impostoBens.toFixed(2);
+
+  const baseCalculo = rendaAnual + totalVeiculos + totalBens;
+  const impostoRenda = rendaAnual * 0.10;
+  const impostoTotal = impostoVeiculos + impostoBens + impostoRenda;
+
+  document.getElementById("baseCalculo").textContent = baseCalculo.toFixed(2);
+  document.getElementById("impostoRenda").textContent = impostoRenda.toFixed(2);
+  document.getElementById("impostoTotal").textContent = impostoTotal.toFixed(2);
+}
+</script>
+
+</body>
+</html>
